@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
       
   onPressed: ()async{
 
-    var url = Uri.https('example.com', 'whatsit/create');
+    var url = Uri.https('https://68e4-49-236-212-182.ngrok-free.app/docs', 'whatsit/create');
   
 try {
     await http.post(url,body:json.encode({
@@ -174,7 +174,7 @@ try {
             child: GestureDetector(onTap:(){
               Navigator.of(context).push(
                 MaterialPageRoute(builder: 
-                (ctx)=>const SignupScreen()
+                (ctx)=>SignupScreen()
                 )
                 );
                 },
