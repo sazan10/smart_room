@@ -68,6 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final username= TextEditingController();
   final password= TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -106,14 +108,24 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
            Image.asset('assets/images/meter.png',width:100),
+          Form(
+      key: _formKey,
+      child:  Column(
+        children: <Widget>[ 
            Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [const Text("Username"),
             Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child: Container(width: 200,
             // height: 40,
-            child:TextField(
+            child:TextFormField(
               controller: username,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Enter valid username';
+                }
+                return null;
+              },
               textAlignVertical: TextAlignVertical.center,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -129,7 +141,13 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child: Container(width: 200,
             // height: 40,
-            child: TextField(
+            child: TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Enter valid password';
+                }
+                return null;
+              },
               obscureText: true,
               controller: password,
               textAlignVertical: TextAlignVertical.center,
@@ -140,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               ),
             ),),)]
-            ),Padding(padding:const EdgeInsets.only(top:10),child:TextButton(
+            )])),Padding(padding:const EdgeInsets.only(top:10),child:TextButton(
               
   style: TextButton.styleFrom(
       foregroundColor: Colors.white, 
@@ -151,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
   onPressed: ()async{
 
     // var url = Uri.https('68e4-49-236-212-182.ngrok-free.app/docs', 'whatsit/create');
-  
+     if (_formKey.currentState!.validate()) {
 try {
     // await http.post(url,body:json.encode({
     //   'title':'d',
@@ -164,7 +182,7 @@ try {
                 );
   } catch(_) {
     print("request error");
-  }
+  }}
     print(username.text);
     print(password.text);
               // Navigator.of(context).push(
