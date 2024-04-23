@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Login',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo '),
+      home: const MyHomePage(title: 'Login'),
     );
   }
 }
@@ -150,13 +150,18 @@ class _MyHomePageState extends State<MyHomePage> {
       
   onPressed: ()async{
 
-    var url = Uri.https('https://68e4-49-236-212-182.ngrok-free.app/docs', 'whatsit/create');
+    // var url = Uri.https('68e4-49-236-212-182.ngrok-free.app/docs', 'whatsit/create');
   
 try {
-    await http.post(url,body:json.encode({
-      'title':'d',
+    // await http.post(url,body:json.encode({
+    //   'title':'d',
 
-    }));
+    // }));
+           Navigator.of(context).push(
+                MaterialPageRoute(builder: 
+                (ctx)=>const DashboardScreen()
+                )
+                );
   } catch(_) {
     print("request error");
   }

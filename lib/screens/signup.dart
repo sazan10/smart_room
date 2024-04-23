@@ -1,31 +1,60 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   // final String title;
     // SignupScreen(this.title, {super.key})
     
-  SignupScreen({super.key});
-  final username= TextEditingController();
+  const SignupScreen({super.key});
+  
+  
+  @override
+  State<StatefulWidget> createState() {
+        return MySignupScreen();
+
+  }
+}
+
+class MySignupScreen extends State<SignupScreen> {
+final username= TextEditingController();
   final password= TextEditingController();
   final phone= TextEditingController();
   final email= TextEditingController();
   final fullName= TextEditingController();
+    final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: const Text("Sign up"),),
     body: Center(child: Column(children: [
+Form(
+      key: _formKey,
+      child:  Column(
+        children: <Widget>[
            Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Container(  constraints: const BoxConstraints(
+            children: [
+              
+              Container(  constraints: const BoxConstraints(
     minWidth: 80, // Set your desired minimum width here
   ),
   child:const Text("Phone No")),
             Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child: Container(width: 200,
             // height: 40,
-            child:TextField(
+            child:TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter phone number';
+                  }
+                  else if(value.length!=14){
+                    return 'Phone number should be in +9779xxxxxxxx';
+                  }
+                  return null;
+                },
               controller: phone,
               textAlignVertical: TextAlignVertical.center,
               decoration: const InputDecoration(
@@ -35,7 +64,7 @@ class SignupScreen extends StatelessWidget {
               ),
             ),),)]
             ),
-                   Row(
+            Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -46,7 +75,13 @@ class SignupScreen extends StatelessWidget {
                  Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                  child: Container(width: 200,
             // height: 40,
-            child: TextField(
+            child: TextFormField(
+                validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Password cannot be empty';
+              }
+              return null;
+            },
               obscureText: true,
               controller: password,
               textAlignVertical: TextAlignVertical.center,
@@ -57,7 +92,8 @@ class SignupScreen extends StatelessWidget {
 
               ),
             ),),)]
-            ),  Row(
+            ),  
+            Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [Container(  constraints: const BoxConstraints(
     minWidth: 80, // Set your desired minimum width here
@@ -66,7 +102,13 @@ class SignupScreen extends StatelessWidget {
             Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child: Container(width: 200,
             // height: 40,
-            child:TextField(
+            child:TextFormField(
+               validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Username cannot be empty';
+                }
+                return null;
+              },
               controller: username,
               textAlignVertical: TextAlignVertical.center,
               decoration: const InputDecoration(
@@ -75,7 +117,8 @@ class SignupScreen extends StatelessWidget {
                 hintText:'',
               ),
             ),),)]
-            ),  Row(
+            ),  
+            Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [Container(  constraints: const BoxConstraints(
                 minWidth: 80, // Set your desired minimum width here
@@ -84,8 +127,14 @@ class SignupScreen extends StatelessWidget {
             Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child: Container(width: 200,
             // height: 40,
-            child:TextField(
+            child:TextFormField(
               controller: fullName,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Name cannot be empty';
+                }
+                return null;
+              },
               textAlignVertical: TextAlignVertical.center,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -93,7 +142,8 @@ class SignupScreen extends StatelessWidget {
                 hintText:'',
               ),
             ),),)]
-            ),  Row(
+            ),  
+            Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [Container(  constraints: const BoxConstraints(
                 minWidth: 80, // Set your desired minimum width here
@@ -102,8 +152,14 @@ class SignupScreen extends StatelessWidget {
             Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child: Container(width: 200,
             // height: 40,
-            child:TextField(
+            child:TextFormField(
               controller: email,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Enter valid email';
+                }
+                return null;
+              },
               textAlignVertical: TextAlignVertical.center,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -120,24 +176,39 @@ class SignupScreen extends StatelessWidget {
       ), 
       
   onPressed: ()async{
+   if (_formKey.currentState!.validate()) {
+      // If the form is valid, display a snackbar. In the real world,
+      // you'd often call a server or save the information in a database.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Processing Data')),
+      );
 
-    var url = Uri.https('https://68e4-49-236-212-182.ngrok-free.app/', 'users/register');
+    var url = Uri.parse('https://53ee-49-236-212-182.ngrok-free.app/users/register');
   // "phn": "strings",
   // "password": "string",
   // "username": "string",
   // "full_name": "string",
   // "email": "string"
+  
 try {
-    // await http.post(url,body:json.encode({
-    //   "phn": phone.text,
-    //   "password": password.text,
-    //   "username": username.text,
-    //   "full_name": fullName.text,
-    //   "email": email.text
+    final response = await http.post(url,
+        // headers: {"Content-Type": "application/json"},
 
-    // }));
-  } catch(_) {
+    body:jsonEncode({
+      "phn": phone.text,
+      "password": password.text,
+      "username": username.text,
+      "full_name": fullName.text,
+      "email": email.text
+
+    }).toString());
+    print("request success response :");
+    String jsonsDataString = response.toString(); // Error: toString of Response is assigned to jsonDataString.
+    // String _data = jsonDecode(jsonsDataString);
+    print(jsonDecode(jsonsDataString));
+  } catch(e) {
     print("request error");
+    print(e);
   }
   
               // Navigator.of(context).push(
@@ -145,10 +216,10 @@ try {
               //   (ctx)=>const DashboardScreen()
               //   )
               //   );
-                },
+                }},
   child: const Text('Signup'),
 )),
-      
+        ]))
           ],),),
     );
   }
