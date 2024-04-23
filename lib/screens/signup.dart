@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -21,7 +19,7 @@ class SignupScreen extends StatefulWidget {
 class MySignupScreen extends State<SignupScreen> {
 final username= TextEditingController();
   final password= TextEditingController();
-  final phone= TextEditingController();
+  final phone= TextEditingController(text: "+9779841122040");
   final email= TextEditingController();
   final fullName= TextEditingController();
     final _formKey = GlobalKey<FormState>();
@@ -179,37 +177,59 @@ Form(
    if (_formKey.currentState!.validate()) {
       // If the form is valid, display a snackbar. In the real world,
       // you'd often call a server or save the information in a database.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Data')),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Processing Data')),
+      // );
+      //  showAlertDialog(context);   
+    String url1='https://53ee-49-236-212-182.ngrok-free.app/users/register';
+    Map data = {'phn': phone.text,'password': password.text,'username': username.text,'full_name': fullName.text,'email': email.text};
+
+    String body = json.encode(data);
+    try {
+
+    
+    var response = await http.post(
+      Uri.parse(url1),
+    headers: {"Content-Type": "application/json"},
+    body: body,
+    );
+
+    Map<String, dynamic> data = jsonDecode(response.body);
+    print('response');
+    if(response.statusCode==200 || response.statusCode==201){
+            ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Signup successful')),
       );
+      Navigator.of(context).pop();  
 
-    var url = Uri.parse('https://53ee-49-236-212-182.ngrok-free.app/users/register');
-  // "phn": "strings",
-  // "password": "string",
-  // "username": "string",
-  // "full_name": "string",
-  // "email": "string"
-  
-try {
-    final response = await http.post(url,
-        // headers: {"Content-Type": "application/json"},
+    }
+    else {
+    showAlertDialog(context,"Error",response.body.toString());
+    }
+}
+catch(e){
+  showAlertDialog(context,"Error",e.toString());
+}
+// try {
+//     final response = await http.post(url,
+//         // headers: {"Content-Type": "application/json"},
 
-    body:jsonEncode({
-      "phn": phone.text,
-      "password": password.text,
-      "username": username.text,
-      "full_name": fullName.text,
-      "email": email.text
+//     body:jsonEncode({
+//       "phn": phone.text,
+//       "password": password.text,
+//       "username": username.text,
+//       "full_name": fullName.text,
+//       "email": email.text
 
-    }).toString());
-    print("request success response :");
-    String jsonsDataString = response.toString(); // Error: toString of Response is assigned to jsonDataString.
-    // String _data = jsonDecode(jsonsDataString);
-    print(jsonDecode(jsonsDataString));
-  } catch(e) {
-    print("request error");
-    print(e);
-  }
+//     }).toString());
+//     print("request success response :");
+//     String jsonsDataString = response.toString(); // Error: toString of Response is assigned to jsonDataString.
+//     // String _data = jsonDecode(jsonsDataString);
+//     print(jsonDecode(jsonsDataString));
+//   } catch(e) {
+//     print("request error");
+//     print(e);
+//   }
   
               // Navigator.of(context).push(
               //   MaterialPageRoute(builder: 
@@ -223,4 +243,33 @@ try {
           ],),),
     );
   }
+
+  
 }
+
+showAlertDialog(BuildContext context, title, message) {  
+  // Create button  
+  Widget okButton =TextButton(  
+    child: Text("OK"),  
+    onPressed: () {  
+      Navigator.of(context).pop();  
+    },  
+  );  
+  
+  // Create AlertDialog  
+  AlertDialog alert = AlertDialog(  
+    title: Text(title),  
+    content: Text(message),  
+    actions: [  
+      okButton,  
+    ],  
+  );  
+  
+  // show the dialog  
+  showDialog(  
+    context: context,  
+    builder: (BuildContext context) {  
+      return alert;  
+    },  
+  );  
+}  
