@@ -7,7 +7,7 @@ import 'package:meter/screens/forgot_password.dart';
 import 'package:meter/screens/signup.dart';
 import 'dart:convert';
 import './screens/dashboard.dart';
-
+import './utils/util.dart';
 
 void main() {
   runApp( MyApp());
@@ -174,14 +174,13 @@ class _MyHomePageState extends State<MyHomePage> {
         const SnackBar(content: Text('Processing Request')),
       );
 try {
- String url1='https://d443-49-236-212-182.ngrok-free.app/token';
     Map data = {'username': username.text,'password': password.text};
 
     String body = json.encode(data);
 
     
     var response = await http.post(
-    Uri.parse(url1),
+    Uri.parse('$url1/token'),
     headers: {
      "Content-Type": "application/x-www-form-urlencoded",
     },

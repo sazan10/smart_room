@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../utils/util.dart';
 
 class SignupScreen extends StatefulWidget {
   // final String title;
@@ -181,7 +182,7 @@ Form(
       //   const SnackBar(content: Text('Processing Data')),
       // );
       //  showAlertDialog(context);   
-    String url1='https://d443-49-236-212-182.ngrok-free.app/users/register';
+    // String url1='https://d443-49-236-212-182.ngrok-free.app/users/register';
     Map data = {'phn': phone.text,'password': password.text,'username': username.text,'full_name': fullName.text,'email': email.text};
 
     String body = json.encode(data);
@@ -189,7 +190,7 @@ Form(
 
     
     var response = await http.post(
-      Uri.parse(url1),
+      Uri.parse('$url1/users/register'),
     headers: {"Content-Type": "application/json"},
     body: body,
     );
