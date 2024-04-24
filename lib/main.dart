@@ -170,18 +170,57 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // var url = Uri.https('68e4-49-236-212-182.ngrok-free.app/docs', 'whatsit/create');
      if (_formKey.currentState!.validate()) {
+       ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Processing Request')),
+      );
 try {
-    // await http.post(url,body:json.encode({
-    //   'title':'d',
+ String url1='https://d443-49-236-212-182.ngrok-free.app/token';
+    Map data = {'username': username.text,'password': password.text};
 
-    // }));
-           Navigator.of(context).push(
+    String body = json.encode(data);
+
+    
+    var response = await http.post(
+    Uri.parse(url1),
+    headers: {
+     "Content-Type": "application/x-www-form-urlencoded",
+    },
+    encoding: Encoding.getByName('utf-8'),
+    body: data,
+   );
+
+
+    // var response = await http.post(
+    //   Uri.parse(url1),
+    // headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    // body: body,
+
+    // );
+
+    // Map<String, dynamic> dataResponse = jsonDecode(response.body);
+    print('response');
+    print(response);
+    if(response.statusCode==200 || response.statusCode==201){
+            ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login successful')),
+      );
+        Navigator.of(context).push(
                 MaterialPageRoute(builder: 
                 (ctx)=>const DashboardScreen()
                 )
                 );
-  } catch(_) {
+
+    }
+    else {
+    showAlertDialog(context,"Error",response.body.toString());
+    }
+
+         
+  } catch(e) {
     print("request error");
+    print(e);
+        showAlertDialog(context,"Error",e.toString());
+
   }}
     print(username.text);
     print(password.text);
@@ -217,3 +256,6 @@ try {
     );
   }
 }
+
+
+
