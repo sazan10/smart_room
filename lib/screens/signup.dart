@@ -23,7 +23,7 @@ final username= TextEditingController();
   final phone= TextEditingController(text: "+9779841122040");
   final email= TextEditingController();
   final fullName= TextEditingController();
-    final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +196,6 @@ Form(
     );
 
     Map<String, dynamic> data = jsonDecode(response.body);
-    print('response');
     if(response.statusCode==200 || response.statusCode==201){
             ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Signup successful')),
@@ -211,32 +210,6 @@ Form(
 catch(e){
   showAlertDialog(context,"Error",e.toString());
 }
-// try {
-//     final response = await http.post(url,
-//         // headers: {"Content-Type": "application/json"},
-
-//     body:jsonEncode({
-//       "phn": phone.text,
-//       "password": password.text,
-//       "username": username.text,
-//       "full_name": fullName.text,
-//       "email": email.text
-
-//     }).toString());
-//     print("request success response :");
-//     String jsonsDataString = response.toString(); // Error: toString of Response is assigned to jsonDataString.
-//     // String _data = jsonDecode(jsonsDataString);
-//     print(jsonDecode(jsonsDataString));
-//   } catch(e) {
-//     print("request error");
-//     print(e);
-//   }
-  
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(builder: 
-              //   (ctx)=>const DashboardScreen()
-              //   )
-              //   );
                 }},
   child: const Text('Signup'),
 )),

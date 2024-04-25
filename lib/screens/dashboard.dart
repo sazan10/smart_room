@@ -1,11 +1,71 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'dart:async';
+import '../utils/util.dart';
 
-class DashboardScreen extends StatelessWidget {
+
+class DashboardScreen extends StatefulWidget {
   // final String title;
     // DashboardScreen(this.title, {super.key})
   const DashboardScreen({super.key});
-
+   
   @override
+  State<StatefulWidget> createState() {
+        return DashboardStateScreen();
+
+  }
+ 
+}
+
+class DashboardStateScreen extends State<DashboardScreen>{
+
+  String _token="";
+  double humidity=0;
+  int temp =0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    getData();
+    Timer.periodic(const Duration(seconds: 10), (timer) {
+   getData();
+});
+  //   http.get( Uri.parse('$url1/token'),
+  //   headers: {
+  //   //  "Content-Type": "application/x-www-form-urlencoded",
+        
+  //   },
+  //   body: data,
+  //  )
+   
+   
+    super.initState();
+  }
+  getData() async{
+    // SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    if(!prefs.containsKey('access_token')){
+      return false;
+    } 
+    final extractedToken = prefs.getString('access_token');
+    // _token = extractedToken!;
+  var response = await http.get( Uri.parse('$url1/data/1'),
+    headers: {
+
+     "Content-Type": "application/json",
+      "Authorization" : "Bearer $extractedToken"        
+    },
+   );
+     Map<String, dynamic> dataResponse = jsonDecode(response.body);
+    setState(() {
+      humidity=dataResponse["humidity"];
+      temp = dataResponse["temp"];
+
+    });
+    return  true; 
+  }
+   @override
   Widget build(BuildContext context) {
   return Scaffold(
       appBar: AppBar(
@@ -45,7 +105,7 @@ class DashboardScreen extends StatelessWidget {
               // constraints: const BoxConstraints(
               //   minWidth: 80, // Set your desired minimum width here
               // ),
-            child:const Text("23 C", style: TextStyle(fontSize: 20)),),)]
+            child:Text("$temp C", style: const TextStyle(fontSize: 20)),),)]
             ),
                    Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +116,7 @@ class DashboardScreen extends StatelessWidget {
               // constraints: const BoxConstraints(
               //   minWidth: 80, // Set your desired minimum width here
               // ),
-            child: const Text("40%", style: TextStyle(fontSize: 20)
+            child: Text("$humidity%", style:const TextStyle(fontSize: 20)
             ),),)]
             ),
           

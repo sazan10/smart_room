@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:meter/screens/forgot_password.dart';
 import 'package:meter/screens/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import './screens/dashboard.dart';
 import './utils/util.dart';
@@ -66,8 +67,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  final username= TextEditingController();
-  final password= TextEditingController();
+  final username= TextEditingController(text:"9862021882");
+  final password= TextEditingController(text:"shrestha");
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -196,13 +197,13 @@ try {
 
     // );
 
-    // Map<String, dynamic> dataResponse = jsonDecode(response.body);
-    print('response');
-    print(response);
+    Map<String, dynamic> dataResponse = jsonDecode(response.body);
     if(response.statusCode==200 || response.statusCode==201){
             ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login successful')),
       );
+    final shared =await SharedPreferences.getInstance();
+    shared.setString("access_token", dataResponse["access_token"]);
         Navigator.of(context).push(
                 MaterialPageRoute(builder: 
                 (ctx)=>const DashboardScreen()
@@ -216,13 +217,9 @@ try {
 
          
   } catch(e) {
-    print("request error");
-    print(e);
         showAlertDialog(context,"Error",e.toString());
 
   }}
-    print(username.text);
-    print(password.text);
               // Navigator.of(context).push(
               //   MaterialPageRoute(builder: 
               //   (ctx)=>const DashboardScreen()
