@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:intl/intl.dart';
 import '../utils/util.dart';
 
 
@@ -24,6 +25,7 @@ class DashboardStateScreen extends State<DashboardScreen>{
   String _token="";
   double humidity=0;
   int temp =0;
+  var time;
   @override
   void initState() {
     // TODO: implement initState
@@ -61,7 +63,7 @@ class DashboardStateScreen extends State<DashboardScreen>{
     setState(() {
       humidity=dataResponse["humidity"];
       temp = dataResponse["temp"];
-
+      time = DateFormat().format(DateTime.parse(dataResponse["time_stamp"]));
     });
     return  true; 
   }
@@ -119,7 +121,18 @@ class DashboardStateScreen extends State<DashboardScreen>{
             child: Text("$humidity%", style:const TextStyle(fontSize: 20)
             ),),)]
             ),
-          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [const Text("Time:", style: TextStyle(fontSize: 20)),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            child: Container( 
+              // constraints: const BoxConstraints(
+              //   minWidth: 80, // Set your desired minimum width here
+              // ),
+            child: Text("$time", style:const TextStyle(fontSize: 20)
+            ),),)]
+            ),
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
