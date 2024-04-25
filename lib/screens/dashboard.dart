@@ -26,23 +26,21 @@ class DashboardStateScreen extends State<DashboardScreen>{
   double humidity=0;
   int temp =0;
   var time;
+  late Timer timer;
+
   @override
   void initState() {
     // TODO: implement initState
     getData();
-    Timer.periodic(const Duration(seconds: 10), (timer) {
+    timer =Timer.periodic(const Duration(seconds: 10), (timer) {
    getData();
 });
-  //   http.get( Uri.parse('$url1/token'),
-  //   headers: {
-  //   //  "Content-Type": "application/x-www-form-urlencoded",
-        
-  //   },
-  //   body: data,
-  //  )
-   
-   
     super.initState();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
   getData() async{
     // SharedPreferences.setMockInitialValues({});
@@ -65,6 +63,7 @@ class DashboardStateScreen extends State<DashboardScreen>{
       temp = dataResponse["temp"];
       time = DateFormat().format(DateTime.parse(dataResponse["time_stamp"]));
     });
+    print(dataResponse);
     return  true; 
   }
    @override
