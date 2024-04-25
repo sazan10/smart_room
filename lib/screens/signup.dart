@@ -24,7 +24,16 @@ final username= TextEditingController();
   final email= TextEditingController();
   final fullName= TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  List <Map> signupData= [];
+  MySignupScreen(){
 
+    signupData = [{"key":"phone", "label":"Phone No.", "errorMessage":["Please enter phone number", "Phone number should be in +9779xxxxxxxx"],"controller":phone},
+    {"key":"password", "label":"Password", "errorMessage":["Password cannot be empty"], "controller":password},
+    {"key":"username", "label":"Username", "errorMessage":["Username cannot be empty"], "controller":username},
+    {"key":"fullname", "label":"Full Name", "errorMessage":["Full name cannot be empty"], "controller":fullName},
+    {"key":"email", "label":"Email", "errorMessage":["enter valid email"], "controller":email},
+    ];
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: const Text("Sign up"),),
@@ -33,56 +42,31 @@ Form(
       key: _formKey,
       child:  Column(
         children: <Widget>[
-           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              
-              Container(  constraints: const BoxConstraints(
-    minWidth: 80, // Set your desired minimum width here
-  ),
-  child:const Text("Phone No")),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Container(width: 200,
-            // height: 40,
-            child:TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter phone number';
-                  }
-                  else if(value.length!=14){
-                    return 'Phone number should be in +9779xxxxxxxx';
-                  }
-                  return null;
-                },
-              controller: phone,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical:0),
-                hintText:'',
-              ),
-            ),),)]
-            ),
-            Row(
+           ...signupData.map((element) => Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(  constraints: const BoxConstraints(
                  minWidth: 80, // Set your desired minimum width here
                  ),
-                 child:const Text("Password")),
+                 child:Text(element["label"])),
                  Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                  child: Container(width: 200,
             // height: 40,
             child: TextFormField(
                 validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Password cannot be empty';
+                return element["errorMessage"][0];
               }
+              if(element["key"]=="phone" && value.length!=14){
+                  return element["errorMessage"][1];
+                
+              }
+              
               return null;
             },
-              obscureText: true,
-              controller: password,
+              obscureText: element["key"]=="password"?true:false,
+              controller: element["controller"],
               textAlignVertical: TextAlignVertical.center,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -91,82 +75,9 @@ Form(
 
               ),
             ),),)]
-            ),  
-            Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Container(  constraints: const BoxConstraints(
-    minWidth: 80, // Set your desired minimum width here
-  ),
-  child:const Text("Username")),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Container(width: 200,
-            // height: 40,
-            child:TextFormField(
-               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Username cannot be empty';
-                }
-                return null;
-              },
-              controller: username,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical:0),
-                hintText:'',
-              ),
-            ),),)]
-            ),  
-            Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Container(  constraints: const BoxConstraints(
-                minWidth: 80, // Set your desired minimum width here
-              ),
-              child:const Text("Full name")),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Container(width: 200,
-            // height: 40,
-            child:TextFormField(
-              controller: fullName,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Name cannot be empty';
-                }
-                return null;
-              },
-              textAlignVertical: TextAlignVertical.center,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical:0),
-                hintText:'',
-              ),
-            ),),)]
-            ),  
-            Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Container(  constraints: const BoxConstraints(
-                minWidth: 80, // Set your desired minimum width here
-              ),
-              child:const Text("Email")),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Container(width: 200,
-            // height: 40,
-            child:TextFormField(
-              controller: email,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Enter valid email';
-                }
-                return null;
-              },
-              textAlignVertical: TextAlignVertical.center,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical:0),
-                hintText:'',
-              ),
-            ),),)]
-            ),Padding(padding:const EdgeInsets.only(top:10),child:TextButton(
+            ),  )
+           
+           ,Padding(padding:const EdgeInsets.only(top:10),child:TextButton(
               
   style: TextButton.styleFrom(
       foregroundColor: Colors.white, 
@@ -176,13 +87,6 @@ Form(
       
   onPressed: ()async{
    if (_formKey.currentState!.validate()) {
-      // If the form is valid, display a snackbar. In the real world,
-      // you'd often call a server or save the information in a database.
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Processing Data')),
-      // );
-      //  showAlertDialog(context);   
-    // String url1='https://d443-49-236-212-182.ngrok-free.app/users/register';
     Map data = {'phn': phone.text,'password': password.text,'username': username.text,'full_name': fullName.text,'email': email.text};
 
     String body = json.encode(data);
