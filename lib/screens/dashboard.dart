@@ -25,8 +25,9 @@ class DashboardStateScreen extends State<DashboardScreen>{
   String _token="";
   double humidity=0;
   int temp =0;
-  var time;
+  var time = DateFormat().format( DateTime.now());
   late Timer timer;
+  List <Map> sensorData= [];
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class DashboardStateScreen extends State<DashboardScreen>{
   }
   getData() async{
     // SharedPreferences.setMockInitialValues({});
+    try{
     final prefs = await SharedPreferences.getInstance();
     if(!prefs.containsKey('access_token')){
       return false;
@@ -65,6 +67,17 @@ class DashboardStateScreen extends State<DashboardScreen>{
     });
     print(dataResponse);
     return  true; 
+    }
+    catch(_){
+
+    }
+  }
+
+  DashboardStateScreen(){
+    sensorData=[{"key":"temp","value":"$temp C","label":"Temperature:"},
+    {"key":"humidity","value":"$humidity%","label":"Humidity:"},
+    {"key":"time","value":time,"label":"Time:"}
+    ];
   }
    @override
   Widget build(BuildContext context) {
@@ -82,56 +95,16 @@ class DashboardStateScreen extends State<DashboardScreen>{
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-       
-           Row(
+            ...sensorData.map((data) => Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [const Text("Temperature:", style: TextStyle(fontSize: 20),),
+            children: [ Text(data["label"], style: const TextStyle(fontSize: 20),),
             Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child:  Container(  
-              // constraints: const BoxConstraints(
-              //   minWidth: 80, // Set your desired minimum width here
-              // ),
-            child:Text("$temp C", style: const TextStyle(fontSize: 20)),),)]
-            ),
-                   Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [const Text("Humidity:", style: TextStyle(fontSize: 20)),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Container( 
-              // constraints: const BoxConstraints(
-              //   minWidth: 80, // Set your desired minimum width here
-              // ),
-            child: Text("$humidity%", style:const TextStyle(fontSize: 20)
-            ),),)]
-            ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [const Text("Time:", style: TextStyle(fontSize: 20)),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Container( 
-              // constraints: const BoxConstraints(
-              //   minWidth: 80, // Set your desired minimum width here
-              // ),
-            child: Text("$time", style:const TextStyle(fontSize: 20)
-            ),),)]
-            ),
+            child:Text(data["value"], style: const TextStyle(fontSize: 20)),),)]
+            )).toList()
+            
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
