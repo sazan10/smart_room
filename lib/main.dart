@@ -134,21 +134,11 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     else {
     showAlertDialog(context,"Error",response.body.toString());
-         Navigator.of(context).push(
-                MaterialPageRoute(builder: 
-                (ctx)=>const DashboardScreen()
-                )
-                );
     }
 
          
   } catch(e) {
         showAlertDialog(context,"Error",e.toString());
-             Navigator.of(context).push(
-                MaterialPageRoute(builder: 
-                (ctx)=>const DashboardScreen()
-                )
-                );
 
   }}
 
