@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import '../utils/util.dart';
-
+import '../widgets/display_text.dart';
 
 class DashboardScreen extends StatefulWidget {
   // final String title;
@@ -91,23 +91,20 @@ class DashboardStateScreen extends State<DashboardScreen>{
         // the App.build method, and use it to set our appbar title.
         title: const Text("Dashboard"),
       ),
-      body: Center(
+      body: 
+
+        Center(
+          child:SingleChildScrollView(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ...sensorData.map((data) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [ Text(data["label"], style: const TextStyle(fontSize: 20),),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child:  Container(  
-            child:Text(data["value"], style: const TextStyle(fontSize: 20)),),)]
-            )).toList()
+            ...sensorData.map((data) => DisplayText(data['label'], data['value'])).toList()
             
           ],
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),) // This trailing comma makes auto-formatting nicer for build methods.
     );
  
   }

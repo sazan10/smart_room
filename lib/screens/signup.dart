@@ -22,7 +22,6 @@ final username= TextEditingController();
   final _formKey = GlobalKey<FormState>();
   List <Map> signupData= [];
   MySignupScreen(){
-
     signupData = [{"key":"phone", "label":"Phone No.", "errorMessage":["Please enter phone number", "Phone number should be in +9779xxxxxxxx"],"controller":phone},
     {"key":"password", "label":"Password", "errorMessage":["Password cannot be empty"], "controller":password},
     {"key":"username", "label":"Username", "errorMessage":["Username cannot be empty"], "controller":username},
@@ -32,10 +31,24 @@ final username= TextEditingController();
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text("Sign up"),),
-    body:  SingleChildScrollView(  child: Center(child: Column(children: [
-    Form(
-      key: _formKey,
+    return Scaffold(
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: const Text("Sign Up"),
+      ),
+    body:  Center( 
+      child:SingleChildScrollView( child:  Column(
+      children: [
+        const Padding(
+          padding:EdgeInsets.only(top:20)
+        ),
+       Form(
+        key: _formKey,
     
         child:Column(
         children: <Widget>[
