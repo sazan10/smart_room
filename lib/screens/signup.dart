@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/util.dart';
-
+import '../widgets/form_field_widget.dart';
+import '../widgets/custom_text_button.dart';
 class SignupScreen extends StatefulWidget {
-  // final String title;
-    // SignupScreen(this.title, {super.key})
-    
   const SignupScreen({super.key});
-  
-  
   @override
   State<StatefulWidget> createState() {
         return MySignupScreen();
@@ -37,117 +33,45 @@ final username= TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: const Text("Sign up"),),
-    body: Center(child: Column(children: [
-Form(
+    body:  SingleChildScrollView(  child: Center(child: Column(children: [
+    Form(
       key: _formKey,
-      child:  Column(
-        children: <Widget>[
-           ...signupData.map((element) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(  constraints: const BoxConstraints(
-                 minWidth: 80, // Set your desired minimum width here
-                 ),
-                 child:Text(element["label"])),
-                 Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                 child: Container(width: 200,
-            // height: 40,
-            child: TextFormField(
-                validator: (value) {
-              if (value == null || value.isEmpty) {
-                return element["errorMessage"][0];
-              }
-              if(element["key"]=="phone" && value.length!=14){
-                  return element["errorMessage"][1];
-                
-              }
-              
-              return null;
-            },
-              obscureText: element["key"]=="password"?true:false,
-              controller: element["controller"],
-              textAlignVertical: TextAlignVertical.center,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText:'',
-                contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical:0),
-
-              ),
-            ),),)]
-            ),  )
-           
-           ,Padding(padding:const EdgeInsets.only(top:10),child:TextButton(
-              
-  style: TextButton.styleFrom(
-      foregroundColor: Colors.white, 
-      backgroundColor: Colors.blue.withOpacity(0.8),
-      padding: const EdgeInsets.symmetric(horizontal:20,vertical:0),
-      ), 
-      
-  onPressed: ()async{
-   if (_formKey.currentState!.validate()) {
-    Map data = {'phn': phone.text,'password': password.text,'username': username.text,'full_name': fullName.text,'email': email.text};
-
-    String body = json.encode(data);
-    try {
-
     
-    var response = await http.post(
-      Uri.parse('$url1/users/register'),
-    headers: {"Content-Type": "application/json"},
-    body: body,
-    );
-
-    Map<String, dynamic> data = jsonDecode(response.body);
-    if(response.statusCode==200 || response.statusCode==201){
-            ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Signup successful')),
-      );
-      Navigator.of(context).pop();  
-
-    }
-    else {
-    showAlertDialog(context,"Error",response.body.toString());
-    }
-}
-catch(e){
-  showAlertDialog(context,"Error",e.toString());
-}
-                }},
-  child: const Text('Signup'),
-)),
+        child:Column(
+        children: <Widget>[
+           ...signupData.map((element) => FormFieldWidget(element),  )     
+           ,Padding(padding:const EdgeInsets.only(top:10),
+            child:CustomTextButton("Signup", signupHandler)),
         ]))
-          ],),),
+          ],)),),
     );
   }
 
-  
-}
+  void signupHandler () async{
+   if (_formKey.currentState!.validate()) {
+    Map data = {'phn': phone.text,'password': password.text,'username': username.text,'full_name': fullName.text,'email': email.text};
+    String body = json.encode(data);
+    try {
+      var response = await http.post(
+        Uri.parse('$url1/users/register'),
+      headers: {"Content-Type": "application/json"},
+      body: body,
+      );
 
-showAlertDialog(BuildContext context, title, message) {  
-  // Create button  
-  Widget okButton =TextButton(  
-    child: Text("OK"),  
-    onPressed: () {  
-      Navigator.of(context).pop();  
-    },  
-  );  
-  
-  // Create AlertDialog  
-  AlertDialog alert = AlertDialog(  
-    title: Text(title),  
-    content: Text(message),  
-    actions: [  
-      okButton,  
-    ],  
-  );  
-  
-  // show the dialog  
-  showDialog(  
-    context: context,  
-    builder: (BuildContext context) {  
-      return alert;  
-    },  
-  );  
-}  
+      Map<String, dynamic> data = jsonDecode(response.body);
+      if(response.statusCode==200 || response.statusCode==201){
+              ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Signup successful')),
+        );
+        Navigator.of(context).pop();  
+
+      }
+      else {
+      showAlertDialog(context,"Error",response.body.toString());
+      }
+    }
+    catch(e){
+      showAlertDialog(context,"Error",e.toString());
+    }
+ }}
+}

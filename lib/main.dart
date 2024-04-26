@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body:SingleChildScrollView(child:Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -189,14 +189,6 @@ try {
     body: data,
    );
 
-
-    // var response = await http.post(
-    //   Uri.parse(url1),
-    // headers: {"Content-Type": "application/x-www-form-urlencoded"},
-    // body: body,
-
-    // );
-
     Map<String, dynamic> dataResponse = jsonDecode(response.body);
     if(response.statusCode==200 || response.statusCode==201){
             ScaffoldMessenger.of(context).showSnackBar(
@@ -248,7 +240,7 @@ try {
 
           ],
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      )), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
