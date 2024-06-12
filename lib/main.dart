@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-           Image.asset('assets/images/meter.png',width:100),
+           Image.asset('assets/images/meter.jpeg',width:100),
           Form(
       key: _formKey,
       child:  Column(

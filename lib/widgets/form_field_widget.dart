@@ -14,7 +14,7 @@ class FormFieldWidget extends StatelessWidget {
                  minWidth: 80, // Set your desired minimum width here
                  ),
                  child:Text(signupField["label"])),
-                 Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                 Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                  child: Container(width: 200,
             // height: 40,
             child: TextFormField(
